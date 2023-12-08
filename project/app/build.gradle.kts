@@ -1,10 +1,8 @@
 plugins {
-    id("com.android.application") version "8.1.2" apply false
-    kotlin("android") // Kotlin Android Plugin
-    kotlin("kapt")    // Kotlin Annotation Processor
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android") // Replace with your desired Kotlin version
+    id("kotlin-kapt") // If you're using Kotlin Annotation Processor
 }
-
-
 android {
     namespace = "com.khaiminh.ecolocator"
     compileSdk = 34
