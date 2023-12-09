@@ -7,9 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
-import io.realm.mongodb.App;
-import io.realm.mongodb.AppConfiguration;
-import io.realm.mongodb.Credentials;
+import io.realm.kotlin.mongodb.App;
+import io.realm.kotlin.mongodb.AppConfiguration;
+import io.realm.kotlin.mongodb.Credentials;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginUser(String username, String password) {
         // Configure your Realm App instance
-        App app = new App(new AppConfiguration.Builder("YOUR_APP_ID").build());
+        App app = new App(new AppConfiguration.Builder("YOUR_REALM_APP_ID").build());
 
         // Login with email/password
         app.loginAsync(Credentials.emailPassword(username, password), result -> {
