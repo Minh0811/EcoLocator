@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
             String username = usernameEditText.getText().toString();
             String password = passwordEditText.getText().toString();
             // Call a method to handle login
-           
+
         });
 
         registerButton.setOnClickListener(v -> {
