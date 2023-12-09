@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android") // Replace with your desired Kotlin version
+    id("io.realm.kotlin")
     id("kotlin-kapt") // If you're using Kotlin Annotation Processor
     id("realm-android")
 }
@@ -53,5 +54,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation("io.realm:realm-android-library:10.18.0-SNAPSHOT") // Replace with the latest version
+    implementation ("io.realm.kotlin:library-base:1.11.0")
+    implementation("io.realm.kotlin:library-sync:1.11.0")// If using Device Sync
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0") // If using coroutines with the SDK
 
 }
