@@ -52,6 +52,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    implementation("io.realm:realm-android-library:11.6.1") // Replace with the latest version
-    implementation("io.realm:realm-android:11.6.1")
+    implementation("io.realm:realm-android-library:10.18.0-SNAPSHOT") // Replace with the latest version
+
 }
