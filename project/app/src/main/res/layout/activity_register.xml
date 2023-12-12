@@ -5,10 +5,10 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".RegisterActivity">
 
     <TextView
-        android:text="@string/login"
+        android:text="@string/register"
         android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -38,14 +38,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <Button
-        android:id="@+id/btn_login"
-        android:text="@string/login"
+        android:id="@+id/btn_register"
+        android:text="@string/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -53,8 +54,8 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:id="@+id/registerNow"
-        android:text="@string/click_to_register"
+        android:id="@+id/loginNow"
+        android:text="@string/click_to_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

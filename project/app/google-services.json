@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "684750818437",
+    "project_id": "ecolocator-f9e14",
+    "storage_bucket": "ecolocator-f9e14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684750818437:android:d73a216fb7fc2aac3e2dec",
+        "android_client_info": {
+          "package_name": "com.khaiminh.ecolocator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYOXF8PjAutgixyR5Z5zAdERQ4Kd33IS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
