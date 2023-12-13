@@ -19,6 +19,10 @@ import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -83,6 +87,25 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
+                                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                                    String userId = firebaseUser.getUid();
+
+                                    // Create a User object or a Map to represent user data
+                                    Map<String, Object> userData = new HashMap<>();
+                                    userData.put("email", email);
+                                    userData.put("role", "user");  // Default role for registered users
+
+                                    // Add user data to Firestore
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    db.collection("users").document(userId).set(userData)
+                                            .addOnSuccessListener(aVoid -> {
+                                                // Handle success
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                // Handle failure
+                                            });
+
+
                                     Toast.makeText(RegisterActivity.this, "Account created.",
                                             Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
