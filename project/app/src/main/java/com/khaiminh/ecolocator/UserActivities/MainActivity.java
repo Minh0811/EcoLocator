@@ -1,13 +1,16 @@
 package com.khaiminh.ecolocator.UserActivities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.khaiminh.ecolocator.Authentication.LoginActivity;
@@ -46,6 +49,29 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
+        });
+
+        // Setup BottomNavigationView
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.nav_home:
+                    // Handle home action
+                    return true;
+                case R.id.nav_locations:
+                    // Handle locations action
+                    return true;
+                case R.id.nav_profile:
+                    // Handle profile action
+                    return true;
+                default:
+                    return false;
+            }
+        });
+
+        // Optionally, handle reselection
+        bottomNav.setOnItemReselectedListener(item -> {
+            // Handle item reselection if needed
         });
     }
 }
