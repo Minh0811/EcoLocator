@@ -2,6 +2,7 @@ package com.khaiminh.ecolocator.UserActivities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -56,29 +57,27 @@ public class MainActivity extends AppCompatActivity {
         // Setup BottomNavigationView
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
             int itemId = item.getItemId();
+
             if (itemId == R.id.nav_home) {
-                // Handle home action
-                Intent intent = new Intent(getApplicationContext(),  MainActivity.class);
-                startActivity(intent);
-                return true;
+                selectedFragment = new HomeFragment();
             } else if (itemId == R.id.nav_locations) {
-                // Handle locations action
-                return true;
+                // selectedFragment = new LocationsFragment();
             } else if (itemId == R.id.nav_profile) {
-                // Handle profile action
-                // Navigate to the User Profile Activity
-                Intent intent = new Intent(getApplicationContext(),  UserProfileActivity.class);
-                startActivity(intent);
-                return true;
+                selectedFragment = new ProfileFragment();
             }
-            return false;
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            }
+            return true;
         });
 
 
-        // Optionally, handle reselection
-        bottomNav.setOnItemReselectedListener(item -> {
-            // Handle item reselection if needed
-        });
+        // To display HomeFragment initially
+        if (savedInstanceState == null) {
+            bottomNav.setSelectedItemId(R.id.nav_home); // Change to the id of your menu item for Home
+        }
     }
 }
