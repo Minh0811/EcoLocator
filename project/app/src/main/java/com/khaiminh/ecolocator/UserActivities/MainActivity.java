@@ -3,6 +3,7 @@ package com.khaiminh.ecolocator.UserActivities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -23,11 +24,11 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     FirebaseUser user;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         auth = FirebaseAuth.getInstance();
         button = findViewById(R.id.logout);
         textView = findViewById(R.id.user_details);
@@ -54,20 +55,20 @@ public class MainActivity extends AppCompatActivity {
         // Setup BottomNavigationView
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.nav_home:
-                    // Handle home action
-                    return true;
-                case R.id.nav_locations:
-                    // Handle locations action
-                    return true;
-                case R.id.nav_profile:
-                    // Handle profile action
-                    return true;
-                default:
-                    return false;
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                // Handle home action
+                return true;
+            } else if (itemId == R.id.nav_locations) {
+                // Handle locations action
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                // Handle profile action
+                return true;
             }
+            return false;
         });
+
 
         // Optionally, handle reselection
         bottomNav.setOnItemReselectedListener(item -> {
