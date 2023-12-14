@@ -1,4 +1,4 @@
-package com.khaiminh.ecolocator;
+package com.khaiminh.ecolocator.UserActivities.UserProfile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,22 +10,22 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.khaiminh.ecolocator.Authentication.LoginActivity;
+import com.khaiminh.ecolocator.R;
 
-public class MainActivity extends AppCompatActivity {
-
+public class UserProfileActivity extends AppCompatActivity {
     FirebaseAuth auth;
     Button button;
     TextView textView;
     FirebaseUser user;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_user_profile);
 
         auth = FirebaseAuth.getInstance();
-        button = findViewById(R.id.logout);
-        textView = findViewById(R.id.user_details);
+        button = findViewById(R.id.user_profile_logout);
+        textView = findViewById(R.id.user_profile_details);
         user = auth.getCurrentUser();
 
         if(user == null){

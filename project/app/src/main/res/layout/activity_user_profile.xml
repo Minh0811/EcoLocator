@@ -6,21 +6,21 @@
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AdminActivities.AdminMainActivity">
+    tools:context=".UserActivities.UserProfile.UserProfileActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="hello admin"/>
+        android:text="hello user"/>
     <TextView
-        android:id="@+id/admin_details"
+        android:id="@+id/user_profile_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="hello cc"/>
 
     <Button
         android:text="@string/logout"
-        android:id="@+id/logout"
+        android:id="@+id/user_profile_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>

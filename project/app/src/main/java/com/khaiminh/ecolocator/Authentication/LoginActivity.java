@@ -1,4 +1,4 @@
-package com.khaiminh.ecolocator;
+package com.khaiminh.ecolocator.Authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,55 +15,47 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.khaiminh.ecolocator.AdminActivities.AdminMainActivity;
+import com.khaiminh.ecolocator.UserActivities.MainActivity;
+import com.khaiminh.ecolocator.R;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class RegisterActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     TextInputEditText editTextEmail, editTextPassword;
-    Button buttonReg;
+    Button buttonLogin;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView textView;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
-        buttonReg = findViewById(R.id.btn_register);
+        buttonLogin = findViewById(R.id.btn_login);
         progressBar = findViewById(R.id.progressBar);
-        textView = findViewById(R.id.loginNow);
+        textView = findViewById(R.id.registerNow);
         textView.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
-        buttonReg.setOnClickListener(new View.OnClickListener() {
+
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
@@ -72,16 +64,16 @@ public class RegisterActivity extends AppCompatActivity {
                 password = String.valueOf(editTextPassword.getText());
 
                 if (TextUtils.isEmpty(email)){
-                    Toast.makeText(RegisterActivity.this, "Enter email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Enter email", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)){
-                    Toast.makeText(RegisterActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                mAuth.createUserWithEmailAndPassword(email, password)
+                mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -90,32 +82,30 @@ public class RegisterActivity extends AppCompatActivity {
                                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                     String userId = firebaseUser.getUid();
 
-                                    // Create a User object or a Map to represent user data
-                                    Map<String, Object> userData = new HashMap<>();
-                                    userData.put("email", email);
-                                    userData.put("role", "user");  // Default role for registered users
-
-                                    // Add user data to Firestore
+                                    // Retrieve user data from Firestore
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                    db.collection("users").document(userId).set(userData)
-                                            .addOnSuccessListener(aVoid -> {
-                                                // Handle success
+                                    db.collection("users").document(userId).get()
+                                            .addOnSuccessListener(documentSnapshot -> {
+                                                if (documentSnapshot.exists()) {
+                                                    String role = documentSnapshot.getString("role");
+                                                    Intent intent;
+                                                    if ("admin".equals(role)) {
+                                                        // Redirect to AdminMainActivity
+                                                        intent = new Intent(getApplicationContext(), AdminMainActivity.class);
+                                                    } else {
+                                                        // Redirect to MainActivity
+                                                        intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                    }
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
                                             })
                                             .addOnFailureListener(e -> {
                                                 // Handle failure
                                             });
-
-
-                                    Toast.makeText(RegisterActivity.this, "Account created.",
-                                            Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                    startActivity(intent);
-                                    finish();
                                 } else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
-
                                 }
                             }
                         });
