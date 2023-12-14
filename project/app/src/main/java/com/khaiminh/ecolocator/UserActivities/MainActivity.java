@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.khaiminh.ecolocator.Authentication.LoginActivity;
 import com.khaiminh.ecolocator.R;
+import com.khaiminh.ecolocator.UserActivities.UserProfile.UserProfileActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,12 +59,17 @@ public class MainActivity extends AppCompatActivity {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {
                 // Handle home action
+                Intent intent = new Intent(getApplicationContext(),  MainActivity.class);
+                startActivity(intent);
                 return true;
             } else if (itemId == R.id.nav_locations) {
                 // Handle locations action
                 return true;
             } else if (itemId == R.id.nav_profile) {
                 // Handle profile action
+                // Navigate to the User Profile Activity
+                Intent intent = new Intent(getApplicationContext(),  UserProfileActivity.class);
+                startActivity(intent);
                 return true;
             }
             return false;

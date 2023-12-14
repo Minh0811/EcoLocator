@@ -51,7 +51,7 @@
     <string name="click_to_login">Click to login</string>
     <string name="click_to_register">Click to register</string>
     <string name="logout">logout</string>
-    <string name="home" />
-    <string name="locations" />
-    <string name="profile" />
+    <string name="home">Home</string>
+    <string name="locations">Locations</string>
+    <string name="profile">Profile</string>
 </resources>
