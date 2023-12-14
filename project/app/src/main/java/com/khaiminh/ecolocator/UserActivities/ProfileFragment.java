@@ -1,10 +1,17 @@
 package com.khaiminh.ecolocator.UserActivities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.khaiminh.ecolocator.Authentication.LoginActivity;
 import com.khaiminh.ecolocator.R;
 
 /**
@@ -59,6 +66,26 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        TextView userEmail = view.findViewById(R.id.user_email);
+        Button logoutButton = view.findViewById(R.id.logout_button);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
+        if (user != null) {
+            userEmail.setText(user.getEmail());
+        }
+
+        logoutButton.setOnClickListener(v -> {
+            auth.signOut();
+            // Redirect to login screen
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        });
+
+        return view;
     }
 }

@@ -6,32 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".UserActivities.MainActivity">
 
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_navigation"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Main home"/>
-
-        <TextView
-            android:id="@+id/user_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="hello cc"/>
-
-        <Button
-            android:text="@string/logout"
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
