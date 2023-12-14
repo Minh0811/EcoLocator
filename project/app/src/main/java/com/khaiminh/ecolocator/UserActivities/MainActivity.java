@@ -17,7 +17,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.khaiminh.ecolocator.Authentication.LoginActivity;
 import com.khaiminh.ecolocator.R;
-import com.khaiminh.ecolocator.UserActivities.UserProfile.UserProfileActivity;
 
 public class MainActivity extends AppCompatActivity {
 
