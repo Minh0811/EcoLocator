@@ -26,31 +26,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Setup BottomNavigationView
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_home) {
-                selectedFragment = new HomeFragment();
-            } else if (itemId == R.id.nav_locations) {
-                // selectedFragment = new LocationsFragment();
-            } else if (itemId == R.id.nav_profile) {
-                selectedFragment = new ProfileFragment();
-            }
-
-            if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-            }
-            return true;
-        });
-
-
-        // To display HomeFragment initially
-        if (savedInstanceState == null) {
-            bottomNav.setSelectedItemId(R.id.nav_home); // Change to the id of your menu item for Home
-        }
     }
 }
