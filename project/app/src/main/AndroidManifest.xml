@@ -28,12 +28,6 @@
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.EcoLocator" />
         <activity
-            android:name=".UserActivities.ProfileFragment"
-            android:exported="false" />
-        <activity
-            android:name=".UserActivities.HomeFragment"
-            android:exported="false" />
-        <activity
             android:name=".AdminActivities.AdminMainActivity"
             android:exported="false" />
         <activity
