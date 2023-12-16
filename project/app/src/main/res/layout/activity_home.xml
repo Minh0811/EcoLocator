@@ -25,4 +25,11 @@
         android:text="@string/home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btnCreateSite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Site"
+        android:layout_centerInParent="true" />
+
 </RelativeLayout>

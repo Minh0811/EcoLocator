@@ -6,12 +6,25 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.khaiminh.ecolocator.R;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.view.View;
+import android.widget.Button;
+
+
 public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Button btnCreateSite = findViewById(R.id.btnCreateSite);
+        btnCreateSite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, CreateSiteActivity.class);
+                startActivity(intent);
+            }
+        });
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.nav_home);
@@ -27,5 +40,6 @@ public class HomeActivity extends AppCompatActivity {
             }
             return false;
         });
+
     }
 }
