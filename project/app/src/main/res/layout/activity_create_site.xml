@@ -38,6 +38,15 @@
         android:layout_height="300dp"
         android:layout_below="@id/siteAdditionalInfo" />
 
+    <TextView
+        android:id="@+id/tvCoordinates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/map"
+        android:layout_marginTop="8dp"
+        android:text="Coordinates: "/>
+
+
     <Button
         android:id="@+id/btnCreateSite"
         android:layout_width="wrap_content"

@@ -1,29 +1,40 @@
 package com.khaiminh.ecolocator.UserActivities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.app.AlertDialog;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.khaiminh.ecolocator.R;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import java.util.Calendar;
 
 
 import com.google.android.gms.maps.OnMapReadyCallback;
+import android.Manifest;
+import android.widget.Toast;
+
 
 public class CreateSiteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private EditText siteName, siteDescription, siteDateTime, siteAdditionalInfo;
     private GoogleMap mMap;
-
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +101,67 @@ public class CreateSiteActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Set up the map (e.g., set a marker, move camera)
+
+    // Enable MyLocation Layer of Google Map
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission();
+        } else {
+            mMap.setMyLocationEnabled(true);
+        }
+        // Set a listener for map click.
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                // Clearing all the markers
+                mMap.clear();
+
+                // Adding a marker at the touched position
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Selected Location"));
+
+                // Displaying the coordinates
+                displayCoordinates(latLng);
+            }
+        });
+    }
+
+    private void displayCoordinates(LatLng latLng) {
+        TextView tvCoordinates = findViewById(R.id.tvCoordinates);
+        String coordinates = "Latitude: " + latLng.latitude + ", Longitude: " + latLng.longitude;
+        tvCoordinates.setText(coordinates);
+    }
+
+
+    private void requestLocationPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed to access the location for the map")
+                    .setPositiveButton("OK", (dialog, which) -> ActivityCompat.requestPermissions(CreateSiteActivity.this,
+                            new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE))
+                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .create().show();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults); // Add this line
+
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission was granted
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    mMap.setMyLocationEnabled(true);
+                }
+            } else {
+                // Permission was denied
+                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
