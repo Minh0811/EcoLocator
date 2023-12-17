@@ -2,6 +2,7 @@ package com.khaiminh.ecolocator.UserActivities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,6 +11,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.khaiminh.ecolocator.R;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,9 +48,22 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Add a marker and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("locations").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    GeoPoint geoPoint = document.getGeoPoint("coordinates");
+                    String name = document.getString("name");
+                    if (geoPoint != null) {
+                        LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(location).title(name));
+                    }
+                }
+            } else {
+                Log.w("LocationsActivity", "Error getting documents.", task.getException());
+            }
+        });
     }
+
 }
