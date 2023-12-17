@@ -19,7 +19,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.khaiminh.ecolocator.UserActivities.MainActivity;
 import com.khaiminh.ecolocator.R;
 
 import java.util.HashMap;

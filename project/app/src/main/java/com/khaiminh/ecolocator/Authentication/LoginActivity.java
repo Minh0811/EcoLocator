@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.khaiminh.ecolocator.AdminActivities.AdminMainActivity;
 import com.khaiminh.ecolocator.UserActivities.HomeActivity;
-import com.khaiminh.ecolocator.UserActivities.MainActivity;
 import com.khaiminh.ecolocator.R;
 
 
