@@ -15,6 +15,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.khaiminh.ecolocator.R;
 
 import android.app.DatePickerDialog;
@@ -22,7 +25,14 @@ import android.app.TimePickerDialog;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -95,8 +105,55 @@ public class CreateSiteActivity extends AppCompatActivity implements OnMapReadyC
 
 
     private void createSite() {
-        // Implement logic to create site with the provided details
+        String name = siteName.getText().toString().trim();
+        String description = siteDescription.getText().toString().trim();
+        String dateTime = siteDateTime.getText().toString().trim();
+        String additionalInfo = siteAdditionalInfo.getText().toString().trim();
+        TextView tvCoordinates = findViewById(R.id.tvCoordinates);
+        String coordinates = tvCoordinates.getText().toString();
+
+        // Validate input data
+        if (name.isEmpty() || description.isEmpty() || dateTime.isEmpty() || coordinates.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Parse coordinates
+        String[] parts = coordinates.split(", ");
+        double latitude = Double.parseDouble(parts[0].split(": ")[1]);
+        double longitude = Double.parseDouble(parts[1].split(": ")[1]);
+        GeoPoint geoPoint = new GeoPoint(latitude, longitude);
+
+        // Parse the dateTime string to Date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(dateTime);
+        } catch (ParseException e) {
+            Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Convert Date to Timestamp
+        Timestamp timestamp = new Timestamp(parsedDate);
+
+        // Create a new location object
+        Map<String, Object> location = new HashMap<>();
+        location.put("name", name);
+        location.put("description", description);
+        location.put("dateTime", timestamp);  // Use Timestamp here
+        location.put("additionalInfo", additionalInfo);
+        location.put("coordinates", geoPoint);
+
+        // Save to Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("locations")
+                .add(location)
+                .addOnSuccessListener(documentReference -> Toast.makeText(CreateSiteActivity.this, "Location added", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(CreateSiteActivity.this, "Error adding location", Toast.LENGTH_SHORT).show());
     }
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
