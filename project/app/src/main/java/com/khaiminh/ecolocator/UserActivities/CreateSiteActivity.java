@@ -64,6 +64,9 @@ public class CreateSiteActivity extends AppCompatActivity implements OnMapReadyC
 
         Button btnCreateSite = findViewById(R.id.btnCreateSite);
         btnCreateSite.setOnClickListener(v -> createSite());
+
+        Button backButton = findViewById(R.id.backButton); // assuming you have a button with id backButton
+        backButton.setOnClickListener(v -> finish()); // finish this activity to return to HomeActivity
     }
 
     private void showDateTimePicker() {

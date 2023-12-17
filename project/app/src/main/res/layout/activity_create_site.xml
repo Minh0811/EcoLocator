@@ -2,11 +2,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp" />
+
     <EditText
         android:id="@+id/siteName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Site Name" />
+        android:hint="Site Name"
+        android:layout_below="@id/backButton"
+        android:layout_marginTop="16dp" />
 
     <EditText
         android:id="@+id/siteDescription"
@@ -46,13 +56,13 @@
         android:layout_marginTop="8dp"
         android:text="Coordinates: "/>
 
-
     <Button
         android:id="@+id/btnCreateSite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create Site"
-        android:layout_below="@id/map"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/tvCoordinates"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
 </RelativeLayout>
