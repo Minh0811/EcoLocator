@@ -16,6 +16,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.khaiminh.ecolocator.R;
@@ -140,13 +142,22 @@ public class CreateSiteActivity extends AppCompatActivity implements OnMapReadyC
         // Convert Date to Timestamp
         Timestamp timestamp = new Timestamp(parsedDate);
 
-        // Create a new location object
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String adminUid = currentUser != null ? currentUser.getUid() : null;
+
+        if (adminUid == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Map<String, Object> location = new HashMap<>();
         location.put("name", name);
         location.put("description", description);
-        location.put("dateTime", timestamp);  // Use Timestamp here
+        location.put("dateTime", timestamp); // existing fields
         location.put("additionalInfo", additionalInfo);
         location.put("coordinates", geoPoint);
+        location.put("admin", adminUid); // add the admin UID here
 
         // Save to Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();

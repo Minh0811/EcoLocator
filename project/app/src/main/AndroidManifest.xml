@@ -17,6 +17,9 @@
         android:theme="@style/Theme.EcoLocator"
         tools:targetApi="31">
         <activity
+            android:name=".UserActivities.SiteDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserActivities.CreateSiteActivity"
             android:exported="false" />
         <activity
