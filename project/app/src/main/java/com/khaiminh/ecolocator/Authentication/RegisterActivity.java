@@ -84,6 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     // Create a User object or a Map to represent user data
                                     Map<String, Object> userData = new HashMap<>();
                                     userData.put("email", email);
+                                    userData.put("uid", userId);  // Storing the UID
                                     userData.put("role", "user");  // Default role for registered users
 
                                     // Add user data to Firestore
@@ -96,7 +97,6 @@ public class RegisterActivity extends AppCompatActivity {
                                                 // Handle failure
                                             });
 
-
                                     Toast.makeText(RegisterActivity.this, "Account created.",
                                             Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -106,10 +106,10 @@ public class RegisterActivity extends AppCompatActivity {
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
-
                                 }
                             }
                         });
+
 
             }
         });

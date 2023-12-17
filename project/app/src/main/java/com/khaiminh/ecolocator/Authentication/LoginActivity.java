@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.khaiminh.ecolocator.AdminActivities.AdminMainActivity;
+import com.khaiminh.ecolocator.UserActivities.HomeActivity;
 import com.khaiminh.ecolocator.UserActivities.MainActivity;
 import com.khaiminh.ecolocator.R;
 
@@ -91,10 +92,10 @@ public class LoginActivity extends AppCompatActivity {
                                                     Intent intent;
                                                     if ("admin".equals(role)) {
                                                         // Redirect to AdminMainActivity
-                                                        intent = new Intent(getApplicationContext(), AdminMainActivity.class);
+                                                        intent = new Intent(LoginActivity.this, AdminMainActivity.class);
                                                     } else {
                                                         // Redirect to MainActivity
-                                                        intent = new Intent(getApplicationContext(), MainActivity.class);
+                                                        intent = new Intent(LoginActivity.this, HomeActivity.class);
                                                     }
                                                     startActivity(intent);
                                                     finish();
