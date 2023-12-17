@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -151,13 +152,16 @@ public class CreateSiteActivity extends AppCompatActivity implements OnMapReadyC
             return;
         }
 
+        String siteId = UUID.randomUUID().toString();
+
         Map<String, Object> location = new HashMap<>();
+        location.put("id", siteId); // Add the random ID here
         location.put("name", name);
         location.put("description", description);
-        location.put("dateTime", timestamp); // existing fields
+        location.put("dateTime", timestamp);
         location.put("additionalInfo", additionalInfo);
         location.put("coordinates", geoPoint);
-        location.put("admin", adminUid); // add the admin UID here
+        location.put("admin", adminUid);
 
         // Save to Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
