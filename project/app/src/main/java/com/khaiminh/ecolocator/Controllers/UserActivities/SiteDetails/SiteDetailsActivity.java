@@ -112,7 +112,6 @@ public class SiteDetailsActivity extends AppCompatActivity {
                     } else {
                         participantList.add(new Participant("Unknown User", "No Email"));
                     }
-
                     if (participantList.size() == participantIds.size()) {
                         adapter.notifyDataSetChanged();
                     }
