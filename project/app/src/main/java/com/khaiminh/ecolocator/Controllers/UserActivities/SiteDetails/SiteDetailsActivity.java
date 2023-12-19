@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -66,8 +67,6 @@ public class SiteDetailsActivity extends AppCompatActivity {
         adapter = new ParticipantsAdapter(participantList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-
     }
 
     private void fetchSiteDetails(String siteId) {
@@ -102,6 +101,7 @@ public class SiteDetailsActivity extends AppCompatActivity {
     }
 
     private void fetchParticipantDetails(List<String> participantIds, FirebaseFirestore db) {
+        Log.d("SiteDetailsActivity", "Fetching participant details");
         for (String participantId : participantIds) {
             db.collection("users").document(participantId).get().addOnSuccessListener(userSnapshot -> {
                 if (userSnapshot.exists()) {
@@ -112,15 +112,19 @@ public class SiteDetailsActivity extends AppCompatActivity {
                     } else {
                         participantList.add(new Participant("Unknown User", "No Email"));
                     }
-                    if (participantList.size() == participantIds.size()) {
-                        adapter.notifyDataSetChanged();
-                    }
+                    adapter.notifyDataSetChanged(); // Update the RecyclerView immediately
+                    Log.d("SiteDetailsActivity", "Fetched details for participant: " + username);
                 }
             }).addOnFailureListener(e -> {
-                // Handle any errors
+                Log.e("SiteDetailsActivity", "Error fetching participant details", e);
+                // Optionally, add a placeholder or a message indicating a fetch error
+                participantList.add(new Participant("Fetch Error", ""));
+                adapter.notifyDataSetChanged();
             });
+
         }
     }
+
 
 
     private void joinSite() {
