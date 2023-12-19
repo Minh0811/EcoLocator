@@ -13,18 +13,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.khaiminh.ecolocator.Models.Participant;
 import com.khaiminh.ecolocator.R;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SiteDetailsActivity extends AppCompatActivity {
+public class SiteDetailsActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     private TextView tvSiteName, tvSiteDescription;
     private Button joinSiteButton, leaveSiteButton;
@@ -38,6 +45,10 @@ public class SiteDetailsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ParticipantsAdapter adapter;
     private List<Participant> participantList;
+
+    private double latitude, longitude;
+    private MapView mapView;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +78,33 @@ public class SiteDetailsActivity extends AppCompatActivity {
         adapter = new ParticipantsAdapter(participantList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        // Initialize the MapView
+        mapView = findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this); // 'this' refers to the SiteDetailsActivity instance
     }
 
     private void fetchSiteDetails(String siteId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("locations").document(siteId).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
-                name = documentSnapshot.getString("name"); // Assign values here
+                name = documentSnapshot.getString("name");
                 description = documentSnapshot.getString("description");
                 adminUid = documentSnapshot.getString("admin");
-                participants = (List<String>) documentSnapshot.get("participants");
+
+                // Fetch the GeoPoint
+                GeoPoint geoPoint = documentSnapshot.getGeoPoint("coordinates");
+                if (geoPoint != null) {
+                    latitude = geoPoint.getLatitude();
+                    longitude = geoPoint.getLongitude();
+                    updateMap();
+                    Log.d("SiteDetailsActivity", "Coordinates: Latitude = " + latitude + ", Longitude = " + longitude);
+                } else {
+                    // Handle the case where the GeoPoint is null
+                    Log.e("SiteDetailsActivity", "GeoPoint is null");
+                    // Optionally, set default values or handle the error
+                }
 
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 if (currentUser != null && !currentUser.getUid().equals(adminUid)) {
@@ -86,12 +114,13 @@ public class SiteDetailsActivity extends AppCompatActivity {
                     isParticipant = participants != null && participants.contains(currentUser.getUid());
                     leaveSiteButton.setEnabled(isParticipant);
                 }
+
                 participants = (List<String>) documentSnapshot.get("participants");
                 if (participants != null) {
                     fetchParticipantDetails(participants, db);
                 }
 
-                updateUIDetails(); // Call updateUIDetails without parameters
+                updateUIDetails();
             } else {
                 // Handle case where the document does not exist
             }
@@ -100,6 +129,26 @@ public class SiteDetailsActivity extends AppCompatActivity {
         });
     }
 
+
+
+    private void updateMap() {
+        if (googleMap != null && latitude != 0 && longitude != 0) {
+            LatLng siteLocation = new LatLng(latitude, longitude);
+            googleMap.clear(); // Clear existing markers
+            googleMap.addMarker(new MarkerOptions().position(siteLocation).title("Site Location"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(siteLocation, 10)); // Adjust zoom level as needed
+        }
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        // If coordinates are already fetched, update the map immediately
+        if (latitude != 0 && longitude != 0) {
+            updateMap();
+        }
+    }
     private void fetchParticipantDetails(List<String> participantIds, FirebaseFirestore db) {
         Log.d("SiteDetailsActivity", "Fetching participant details");
         for (String participantId : participantIds) {
@@ -189,6 +238,29 @@ public class SiteDetailsActivity extends AppCompatActivity {
     private void updateUIDetails() {
         tvSiteName.setText(name); // Use class-level variables
         tvSiteDescription.setText(description);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 }
 
