@@ -26,13 +26,11 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    TextInputEditText editTextEmail, editTextPassword;
+    TextInputEditText editTextEmail, editTextPassword, editTextName; // Added editTextName
     Button buttonReg;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView textView;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
+        editTextName = findViewById(R.id.name); // Initialize editTextName
         buttonReg = findViewById(R.id.btn_register);
         progressBar = findViewById(R.id.progressBar);
         textView = findViewById(R.id.loginNow);
@@ -57,9 +56,10 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
-                String email, password;
+                String email, password, name;
                 email = String.valueOf(editTextEmail.getText());
                 password = String.valueOf(editTextPassword.getText());
+                name = String.valueOf(editTextName.getText()); // Get the name
 
                 if (TextUtils.isEmpty(email)){
                     Toast.makeText(RegisterActivity.this, "Enter email", Toast.LENGTH_SHORT).show();
@@ -68,6 +68,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(password)){
                     Toast.makeText(RegisterActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(name)){
+                    Toast.makeText(RegisterActivity.this, "Enter name", Toast.LENGTH_SHORT).show(); // Check if name is empty
                     return;
                 }
 
@@ -84,6 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     Map<String, Object> userData = new HashMap<>();
                                     userData.put("email", email);
                                     userData.put("uid", userId);  // Storing the UID
+                                    userData.put("name", name);  // Store the name
                                     userData.put("role", "user");  // Default role for registered users
 
                                     // Add user data to Firestore
@@ -108,8 +114,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
-
             }
         });
     }
