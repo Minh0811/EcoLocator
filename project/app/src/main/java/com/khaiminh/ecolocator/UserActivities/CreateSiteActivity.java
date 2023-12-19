@@ -30,6 +30,7 @@ import android.widget.TimePicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -162,6 +163,8 @@ public class CreateSiteActivity extends AppCompatActivity implements OnMapReadyC
         location.put("additionalInfo", additionalInfo);
         location.put("coordinates", geoPoint);
         location.put("admin", adminUid);
+        // Add an empty list for participants
+        location.put("participants", new ArrayList<String>());
 
         // Save to Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();

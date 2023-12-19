@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.SearchView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,8 +20,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.khaiminh.ecolocator.R;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LocationsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
+    private SearchView searchView;
+    private List<Marker> markers = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +52,44 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        searchView = findViewById(R.id.searchView);
+        setupSearchView();
+    }
+
+    private void setupSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterMarkers(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterMarkers(newText);
+                return false;
+            }
+        });
+    }
+
+    private void filterMarkers(String text) {
+        for (Marker marker : markers) {
+            if (marker.getTitle().toLowerCase().contains(text.toLowerCase())) {
+                marker.setVisible(true);
+            } else {
+                marker.setVisible(false);
+            }
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        loadLocations();
+    }
 
+    private void loadLocations() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("locations").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -60,6 +99,7 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
                     if (geoPoint != null) {
                         LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
                         Marker marker = mMap.addMarker(new MarkerOptions().position(location).title(name));
+                        markers.add(marker);
                         marker.setTag(document.getId()); // Store the document ID in the marker
                     }
                 }
@@ -68,27 +108,20 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
-        // Set a listener for marker click
         mMap.setOnMarkerClickListener(marker -> {
-            // Retrieve the site ID from the marker
             String siteId = (String) marker.getTag();
-
-            // Display an AlertDialog
             new AlertDialog.Builder(LocationsActivity.this)
                     .setTitle("View Site Details")
                     .setMessage("Do you want to view the details of this site?")
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        // User chose 'Yes', proceed to show site details
                         Intent intent = new Intent(LocationsActivity.this, SiteDetailsActivity.class);
-                        intent.putExtra("siteId", siteId); // Pass the site ID
+                        intent.putExtra("siteId", siteId);
                         startActivity(intent);
                     })
-                    .setNegativeButton("No", null) // User chose 'No'
+                    .setNegativeButton("No", null)
                     .show();
 
-            return true; // Return true to indicate that we have handled the event
+            return true;
         });
     }
-
-
 }
