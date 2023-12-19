@@ -45,6 +45,12 @@
         android:layout_gravity="center"
         android:layout_marginTop="16dp"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewParticipants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"/>
+
     <!-- Add more TextViews or other components as needed for additional details -->
 
 </LinearLayout>

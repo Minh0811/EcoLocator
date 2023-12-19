@@ -1,4 +1,4 @@
-package com.khaiminh.ecolocator.Authentication;
+package com.khaiminh.ecolocator.Controllers.Authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +19,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.khaiminh.ecolocator.AdminActivities.AdminMainActivity;
-import com.khaiminh.ecolocator.UserActivities.HomeActivity;
+import com.khaiminh.ecolocator.Controllers.AdminActivities.AdminMainActivity;
+import com.khaiminh.ecolocator.Controllers.UserActivities.HomeActivity;
 import com.khaiminh.ecolocator.R;
 
 

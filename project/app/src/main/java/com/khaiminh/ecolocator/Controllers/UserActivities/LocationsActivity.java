@@ -1,4 +1,4 @@
-package com.khaiminh.ecolocator.UserActivities;
+package com.khaiminh.ecolocator.Controllers.UserActivities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.SearchView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -18,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.khaiminh.ecolocator.R;
+import com.khaiminh.ecolocator.Controllers.UserActivities.SiteDetails.SiteDetailsActivity;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;

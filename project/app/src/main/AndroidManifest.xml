@@ -17,33 +17,33 @@
         android:theme="@style/Theme.EcoLocator"
         tools:targetApi="31">
         <activity
-            android:name=".UserActivities.SiteDetailsActivity"
+            android:name=".Controllers.UserActivities.SiteDetails.SiteDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".UserActivities.CreateSiteActivity"
+            android:name=".Controllers.UserActivities.CreateSiteActivity"
             android:exported="false" />
         <activity
-            android:name=".UserActivities.ProfileActivity"
+            android:name=".Controllers.UserActivities.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".UserActivities.LocationsActivity"
+            android:name=".Controllers.UserActivities.LocationsActivity"
             android:exported="false" />
         <activity
-            android:name=".UserActivities.HomeActivity"
+            android:name=".Controllers.UserActivities.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.EcoLocator" />
         <activity
-            android:name=".AdminActivities.AdminMainActivity"
+            android:name=".Controllers.AdminActivities.AdminMainActivity"
             android:exported="false" />
         <activity
             android:name=".UserActivities.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Authentication.RegisterActivity"
+            android:name=".Controllers.Authentication.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".Authentication.LoginActivity"
+            android:name=".Controllers.Authentication.LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.EcoLocator">

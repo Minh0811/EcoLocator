@@ -1,4 +1,4 @@
-package com.khaiminh.ecolocator.UserActivities;
+package com.khaiminh.ecolocator.Controllers.UserActivities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

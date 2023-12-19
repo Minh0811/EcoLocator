@@ -1,10 +1,14 @@
-package com.khaiminh.ecolocator.UserActivities;
+package com.khaiminh.ecolocator.Controllers.UserActivities.SiteDetails;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,8 +17,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.khaiminh.ecolocator.Models.Participant;
 import com.khaiminh.ecolocator.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SiteDetailsActivity extends AppCompatActivity {
@@ -24,6 +30,14 @@ public class SiteDetailsActivity extends AppCompatActivity {
     private String siteId, adminUid, name, description;
     private List<String> participants;
     private boolean isParticipant;
+
+    private ListView participantsListView;
+    private ArrayAdapter<String> participantsAdapter;
+
+    private RecyclerView recyclerView;
+    private ParticipantsAdapter adapter;
+    private List<Participant> participantList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +60,14 @@ public class SiteDetailsActivity extends AppCompatActivity {
 
         joinSiteButton.setOnClickListener(v -> joinSite());
         leaveSiteButton.setOnClickListener(v -> leaveSite());
+
+        recyclerView = findViewById(R.id.recyclerViewParticipants);
+        participantList = new ArrayList<>();
+        adapter = new ParticipantsAdapter(participantList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+
     }
 
     private void fetchSiteDetails(String siteId) {
@@ -65,6 +87,10 @@ public class SiteDetailsActivity extends AppCompatActivity {
                     isParticipant = participants != null && participants.contains(currentUser.getUid());
                     leaveSiteButton.setEnabled(isParticipant);
                 }
+                participants = (List<String>) documentSnapshot.get("participants");
+                if (participants != null) {
+                    fetchParticipantDetails(participants, db);
+                }
 
                 updateUIDetails(); // Call updateUIDetails without parameters
             } else {
@@ -73,6 +99,28 @@ public class SiteDetailsActivity extends AppCompatActivity {
         }).addOnFailureListener(e -> {
             // Handle any errors
         });
+    }
+
+    private void fetchParticipantDetails(List<String> participantIds, FirebaseFirestore db) {
+        for (String participantId : participantIds) {
+            db.collection("users").document(participantId).get().addOnSuccessListener(userSnapshot -> {
+                if (userSnapshot.exists()) {
+                    String username = userSnapshot.getString("name");
+                    String email = userSnapshot.getString("email");
+                    if (username != null && email != null) {
+                        participantList.add(new Participant(username, email));
+                    } else {
+                        participantList.add(new Participant("Unknown User", "No Email"));
+                    }
+
+                    if (participantList.size() == participantIds.size()) {
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }).addOnFailureListener(e -> {
+                // Handle any errors
+            });
+        }
     }
 
 

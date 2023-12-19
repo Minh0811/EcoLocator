@@ -1,4 +1,4 @@
-package com.khaiminh.ecolocator.Authentication;
+package com.khaiminh.ecolocator.Controllers.Authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

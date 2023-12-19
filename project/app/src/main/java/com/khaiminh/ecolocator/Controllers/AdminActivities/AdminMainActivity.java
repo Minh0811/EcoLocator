@@ -1,4 +1,4 @@
-package com.khaiminh.ecolocator.AdminActivities;
+package com.khaiminh.ecolocator.Controllers.AdminActivities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.khaiminh.ecolocator.Authentication.LoginActivity;
+import com.khaiminh.ecolocator.Controllers.Authentication.LoginActivity;
 import com.khaiminh.ecolocator.R;
 
 public class AdminMainActivity extends AppCompatActivity {
