@@ -28,14 +28,22 @@ import com.khaiminh.ecolocator.Models.Participant;
 import com.khaiminh.ecolocator.R;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import com.google.firebase.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SiteDetailsActivity extends AppCompatActivity implements OnMapReadyCallback{
 
-    private TextView tvSiteName, tvSiteDescription;
+    private TextView tvSiteName, tvSiteDescription, tvdateTime, tvadditionalInfo;
+
     private Button joinSiteButton, leaveSiteButton;
     private String siteId, adminUid, name, description;
+
+    private String dateTimeString, additionalInfoString;
     private List<String> participants;
     private boolean isParticipant;
 
@@ -57,6 +65,8 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
 
         tvSiteName = findViewById(R.id.tvSiteName);
         tvSiteDescription = findViewById(R.id.tvSiteDescription);
+        tvdateTime = findViewById(R.id.tvDateTime);
+        tvadditionalInfo = findViewById(R.id.tvAdditionalInfo);
         joinSiteButton = findViewById(R.id.joinSiteButton);
         leaveSiteButton = findViewById(R.id.leaveSiteButton);
 
@@ -92,6 +102,18 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
                 name = documentSnapshot.getString("name");
                 description = documentSnapshot.getString("description");
                 adminUid = documentSnapshot.getString("admin");
+
+
+                Timestamp timestamp = documentSnapshot.getTimestamp("dateTime");
+                if (timestamp != null) {
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                    SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    dateTimeString = "Date: " + sdfDate.format(timestamp.toDate()) + ", Time: " + sdfTime.format(timestamp.toDate());
+                } else {
+                    dateTimeString = "Date: N/A, Time: N/A"; // Or any default value
+                }
+
+                additionalInfoString = documentSnapshot.getString("additionalInfo");
 
                 // Fetch the GeoPoint
                 GeoPoint geoPoint = documentSnapshot.getGeoPoint("coordinates");
@@ -236,8 +258,10 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
 
 
     private void updateUIDetails() {
-        tvSiteName.setText(name); // Use class-level variables
+        tvSiteName.setText(name);
         tvSiteDescription.setText(description);
+        tvdateTime.setText(dateTimeString);
+        tvadditionalInfo.setText(additionalInfoString);
     }
     @Override
     public void onResume() {
