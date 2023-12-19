@@ -23,7 +23,8 @@ import com.khaiminh.ecolocator.R;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.ArrayList;
+import java.util.List;
 public class RegisterActivity extends AppCompatActivity {
 
     TextInputEditText editTextEmail, editTextPassword, editTextName; // Added editTextName
@@ -84,6 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                     String userId = firebaseUser.getUid();
+                                    List<String> siteJoined = new ArrayList<>();
 
                                     // Create a User object or a Map to represent user data
                                     Map<String, Object> userData = new HashMap<>();
@@ -91,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     userData.put("uid", userId);  // Storing the UID
                                     userData.put("name", name);  // Store the name
                                     userData.put("role", "user");  // Default role for registered users
-
+                                    userData.put("siteJoined", siteJoined); // Initialize siteJoined as an empty list
                                     // Add user data to Firestore
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     db.collection("users").document(userId).set(userData)

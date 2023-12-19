@@ -84,17 +84,21 @@ public class SiteDetailsActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference siteRef = db.collection("locations").document(siteId);
-
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if (currentUser != null) {
             if (participants != null && participants.contains(currentUser.getUid())) {
                 Toast.makeText(this, "You are already a participant.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Update site's participants
             siteRef.update("participants", FieldValue.arrayUnion(currentUser.getUid()))
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(this, "You have successfully joined the site.", Toast.LENGTH_SHORT).show();
+                        // Update user's siteJoined field
+                        DocumentReference userRef = db.collection("users").document(currentUser.getUid());
+                        userRef.update("siteJoined", FieldValue.arrayUnion(siteId));
                     })
                     .addOnFailureListener(e -> {
                         // Handle failure
@@ -111,12 +115,16 @@ public class SiteDetailsActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference siteRef = db.collection("locations").document(siteId);
-
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if (currentUser != null) {
+            // Update site's participants
             siteRef.update("participants", FieldValue.arrayRemove(currentUser.getUid()))
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(this, "You have left the site.", Toast.LENGTH_SHORT).show();
+                        // Update user's siteJoined field
+                        DocumentReference userRef = db.collection("users").document(currentUser.getUid());
+                        userRef.update("siteJoined", FieldValue.arrayRemove(siteId));
                         isParticipant = false;
                         leaveSiteButton.setEnabled(false);
                     })
