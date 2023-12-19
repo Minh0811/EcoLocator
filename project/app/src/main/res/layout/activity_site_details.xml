@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+
     <Button
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
@@ -11,6 +12,7 @@
         android:text="Back"
         android:layout_alignParentTop="true"
         android:layout_marginTop="16dp" />
+
     <TextView
         android:id="@+id/tvSiteName"
         android:layout_width="wrap_content"
@@ -26,6 +28,22 @@
         android:textSize="16sp"
         android:text="Description"
         android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/joinSiteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join Site"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"/>
+    <Button
+        android:id="@+id/leaveSiteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leave Site"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"/>
 
     <!-- Add more TextViews or other components as needed for additional details -->
 
