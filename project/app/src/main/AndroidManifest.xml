@@ -37,9 +37,6 @@
             android:name=".Controllers.AdminActivities.AdminMainActivity"
             android:exported="false" />
         <activity
-            android:name=".UserActivities.MainActivity"
-            android:exported="false" />
-        <activity
             android:name=".Controllers.Authentication.RegisterActivity"
             android:exported="false" />
         <activity

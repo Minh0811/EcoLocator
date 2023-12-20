@@ -18,6 +18,17 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.khaiminh.ecolocator.R;
 import com.khaiminh.ecolocator.Controllers.UserActivities.SiteDetails.SiteDetailsActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.tasks.OnSuccessListener;
+import android.Manifest;
+import android.content.pm.PackageManager;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import android.location.Location;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,7 +39,7 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private SearchView searchView;
     private List<Marker> markers = new ArrayList<>();
-
+    private FusedLocationProviderClient fusedLocationClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +67,7 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
 
         searchView = findViewById(R.id.searchView);
         setupSearchView();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
     private void setupSearchView() {
@@ -87,6 +99,27 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        // Check for location permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+        } else {
+            mMap.setMyLocationEnabled(true);
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations, this can be null.
+                            if (location != null) {
+                                LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                            }
+                        }
+                    });
+        }
+
         loadLocations();
     }
 
@@ -125,4 +158,23 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
             return true;
         });
     }
+    // Add this method to handle the permission request response
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission was granted. If the map is already ready, set the user's location.
+                if (mMap != null) {
+                    onMapReady(mMap);
+                }
+            } else {
+                // Permission was denied. You can add further actions to handle this case.
+            }
+        }
+    }
+
+
+    // Add a constant for the location permission request
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
 }
