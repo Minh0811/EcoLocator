@@ -48,6 +48,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create Site"
-        android:layout_centerInParent="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/toolbar"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewFitnessChallenges"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/btnCreateSite"
+        android:paddingTop="16dp"
+        />
 
 </RelativeLayout>
