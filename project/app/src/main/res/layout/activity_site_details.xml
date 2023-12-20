@@ -56,20 +56,39 @@
         android:layout_height="200dp"
         android:layout_marginTop="16dp"/>
     <Button
-        android:id="@+id/joinSiteButton"
+        android:id="@+id/editSiteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Join Site"
+        android:layout_gravity="center_horizontal"
+        android:text="Edit Site"
         android:visibility="gone"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"/>
-    <Button
-        android:id="@+id/leaveSiteButton"
+       />
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Leave Site"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/leaveSiteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leave Site"
+            android:visibility="gone"
+            />
+
+        <Button
+            android:id="@+id/joinSiteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Join Site"
+            android:visibility="gone"
+            android:layout_marginLeft="16dp"/>
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewParticipants"

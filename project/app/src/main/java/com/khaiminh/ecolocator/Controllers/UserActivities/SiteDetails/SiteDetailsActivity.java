@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -57,6 +58,7 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
     private double latitude, longitude;
     private MapView mapView;
     private GoogleMap googleMap;
+    private Button editSiteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,7 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
         tvadditionalInfo = findViewById(R.id.tvAdditionalInfo);
         joinSiteButton = findViewById(R.id.joinSiteButton);
         leaveSiteButton = findViewById(R.id.leaveSiteButton);
-
+        editSiteButton = findViewById(R.id.editSiteButton);
         siteId = getIntent().getStringExtra("siteId");
         if (siteId != null) {
             fetchSiteDetails(siteId);
@@ -93,8 +95,21 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this); // 'this' refers to the SiteDetailsActivity instance
-    }
 
+        // After fetching site details and determining the admin
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null && currentUser.getUid().equals(adminUid)) {
+            editSiteButton.setVisibility(View.VISIBLE); // Show the edit button for admin
+            editSiteButton.setOnClickListener(v -> navigateToEditScreen());
+
+        }
+    }
+    private void navigateToEditScreen() {
+        // Intent to navigate to the site detail edit screen
+        Intent intent = new Intent(SiteDetailsActivity.this, SiteDetailEditActivity.class);
+        intent.putExtra("siteId", siteId); // Pass the site ID or other necessary data
+        startActivity(intent);
+    }
     private void fetchSiteDetails(String siteId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("locations").document(siteId).get().addOnSuccessListener(documentSnapshot -> {
@@ -129,12 +144,21 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
                 }
 
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null && !currentUser.getUid().equals(adminUid)) {
-                    joinSiteButton.setVisibility(View.VISIBLE);
-                    leaveSiteButton.setVisibility(View.VISIBLE);
 
-                    isParticipant = participants != null && participants.contains(currentUser.getUid());
-                    leaveSiteButton.setEnabled(isParticipant);
+                if (currentUser != null) {
+                    if (currentUser.getUid().equals(adminUid)) {
+                        // Current user is the admin
+                        editSiteButton.setVisibility(View.VISIBLE); // Show the edit button for admin
+                        editSiteButton.setOnClickListener(v -> navigateToEditScreen());
+
+                        joinSiteButton.setVisibility(View.GONE); // Hide the join button
+                        leaveSiteButton.setVisibility(View.GONE); // Hide the leave button
+                    } else {
+                        // Current user is not the admin
+                        isParticipant = participants != null && participants.contains(currentUser.getUid());
+                        joinSiteButton.setVisibility(isParticipant ? View.GONE : View.VISIBLE);
+                        leaveSiteButton.setVisibility(isParticipant ? View.GONE : View.VISIBLE);
+                    }
                 }
 
                 participants = (List<String>) documentSnapshot.get("participants");
