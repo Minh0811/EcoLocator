@@ -12,12 +12,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"/>
 
+    <Spinner
+        android:id="@+id/distanceSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchView"/>
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/searchView"/>
+        android:layout_below="@id/distanceSpinner"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -26,20 +32,4 @@
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_nav_menu" />
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation"
-        android:layout_below="@id/searchView"/>
-
-    <TextView
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:id="@+id/loginNow"
-        android:text="@string/locations"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/searchView"/>
 </RelativeLayout>

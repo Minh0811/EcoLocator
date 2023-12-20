@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.location.Location;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,8 +42,11 @@ import java.util.List;
 public class LocationsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private SearchView searchView;
+    private Spinner distanceSpinner; // Add this line to declare the distanceSpinner
     private List<Marker> markers = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationClient;
+    private Location currentUserLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +75,25 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
         searchView = findViewById(R.id.searchView);
         setupSearchView();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        // Setup the distance spinner
+        distanceSpinner = findViewById(R.id.distanceSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.distance_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        distanceSpinner.setAdapter(adapter);
+
+        distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selection = parent.getItemAtPosition(position).toString();
+                updateFilter(selection);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     private void setupSearchView() {
@@ -95,10 +121,50 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
     }
+    private void filterMarkers(String text, double maxDistance) {
+        for (Marker marker : markers) {
+            LatLng markerLocation = marker.getPosition();
+            float[] results = new float[1];
+            Location.distanceBetween(currentUserLocation.getLatitude(), currentUserLocation.getLongitude(),
+                    markerLocation.latitude, markerLocation.longitude, results);
+            float distanceInMeters = results[0];
 
+            boolean isWithinDistance = maxDistance == Double.MAX_VALUE || distanceInMeters <= maxDistance;
+
+            if (marker.getTitle().toLowerCase().contains(text.toLowerCase()) && isWithinDistance) {
+                marker.setVisible(true);
+            } else {
+                marker.setVisible(false);
+            }
+        }
+    }
+
+    private void updateFilter(String selection) {
+        double maxDistance = convertSelectionToDistance(selection);
+        filterMarkers(searchView.getQuery().toString(), maxDistance);
+    }
+
+
+    private double convertSelectionToDistance(String selection) {
+        switch (selection) {
+            case "Below 500m":
+                return 500;
+            case "Below 1km":
+                return 1000;
+            case "Below 2km":
+                return 2000;
+            case "Below 5km":
+                return 5000;
+            case ">5km":
+                return Double.MAX_VALUE;
+            default:
+                return 0;
+        }
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
 
         // Check for location permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -119,7 +185,17 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
                         }
                     });
         }
-
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            currentUserLocation = location; // Update the user's current location
+                            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                        }
+                    }
+                });
         loadLocations();
     }
 
