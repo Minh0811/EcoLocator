@@ -9,18 +9,22 @@
     tools:context=".Controllers.AdminActivities.AdminMainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="hello admin"/>
-    <TextView
         android:id="@+id/admin_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="hello cc"/>
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="hello admin"/>
+
+
 
     <Button
         android:text="@string/logout"
         android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <!-- RecyclerView to display sites -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSites"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
