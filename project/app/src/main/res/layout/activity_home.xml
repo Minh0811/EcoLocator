@@ -52,11 +52,11 @@
         android:layout_below="@id/toolbar"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewFitnessChallenges"
+        android:id="@+id/recyclerViewSites"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/btnCreateSite"
-        android:paddingTop="16dp"
-        />
+        android:paddingTop="16dp" />
+
 
 </RelativeLayout>

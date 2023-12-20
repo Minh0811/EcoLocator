@@ -27,9 +27,15 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.khaiminh.ecolocator.Models.Site; // Ensure you have a Site model class
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = "HomeActivity";
+    private RecyclerView recyclerViewSites;
+    private SiteAdapter siteAdapter; // Adapter for the sites
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,13 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         });
 
+        // Setup RecyclerView
+        recyclerViewSites = findViewById(R.id.recyclerViewSites);
+        recyclerViewSites.setLayoutManager(new LinearLayoutManager(this));
+        siteAdapter = new SiteAdapter(new ArrayList<>()); // Initialize with an empty list
+        recyclerViewSites.setAdapter(siteAdapter);
+
+        loadSites(); // Method to load sites from Firestore
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -125,5 +138,19 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         return (currentUser != null) ? currentUser.getUid() : null;
     }
-
+    private void loadSites() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("locations") // Replace with your actual collection name
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Site> sites = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        sites.add(document.toObject(Site.class)); // Assuming a Site model class
+                    }
+                    siteAdapter.updateSites(sites);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                });
+    }
 }
