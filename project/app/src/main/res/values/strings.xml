@@ -58,6 +58,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="name">name</string>
+    <string name="edit_site">Edit Site</string>
 
     <string-array name="distance_options">
         <item>Below 500m</item>
