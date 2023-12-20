@@ -73,10 +73,11 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
         leaveSiteButton = findViewById(R.id.leaveSiteButton);
         editSiteButton = findViewById(R.id.editSiteButton);
         siteId = getIntent().getStringExtra("siteId");
+        Log.d("SiteDetailsActivity", "onCreate: siteId = " + siteId);
         if (siteId != null) {
             fetchSiteDetails(siteId);
         } else {
-            // Handle the case where siteId is not passed or is null
+            Log.d("SiteDetailsActivity", "onCreate: siteId is NULL");
         }
 
         Button backButton = findViewById(R.id.backButton); // assuming you have a button with id backButton
@@ -114,6 +115,7 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("locations").document(siteId).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
+                Log.d("SiteDetailsActivity", "fetchSiteDetails: Document exists");
                 name = documentSnapshot.getString("name");
                 description = documentSnapshot.getString("description");
                 adminUid = documentSnapshot.getString("admin");
@@ -156,6 +158,7 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
                     } else {
                         // Current user is not the admin
                         isParticipant = participants != null && participants.contains(currentUser.getUid());
+
                         joinSiteButton.setVisibility(isParticipant ? View.GONE : View.VISIBLE);
                         leaveSiteButton.setVisibility(isParticipant ? View.GONE : View.VISIBLE);
                     }
@@ -167,11 +170,13 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
                 }
 
                 updateUIDetails();
+                isParticipant = participants != null && participants.contains(currentUser.getUid());
+                Log.d("SiteDetailsActivity", "fetchSiteDetails: isParticipant = " + isParticipant);
             } else {
-                // Handle case where the document does not exist
+                Log.d("SiteDetailsActivity", "fetchSiteDetails: Document does not exist");
             }
         }).addOnFailureListener(e -> {
-            // Handle any errors
+            Log.e("SiteDetailsActivity", "fetchSiteDetails: Error fetching site details", e);
         });
     }
 
@@ -223,6 +228,7 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
 
 
     private void joinSite() {
+        Log.d("SiteDetailsActivity", "joinSite called");
         if (siteId == null) {
             // Handle the case where siteId is null
             return;
@@ -254,8 +260,10 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
         leaveSiteButton.setEnabled(true);
     }
     private void leaveSite() {
+        Log.d("SiteDetailsActivity", "leaveSite() called");
+
         if (siteId == null || !isParticipant) {
-            // Handle invalid state or user not a participant
+            Log.d("SiteDetailsActivity", "Site ID is null or user is not a participant");
             return;
         }
 
@@ -264,21 +272,26 @@ public class SiteDetailsActivity extends AppCompatActivity implements OnMapReady
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null) {
-            // Update site's participants
+            Log.d("SiteDetailsActivity", "Current user is not null");
+
             siteRef.update("participants", FieldValue.arrayRemove(currentUser.getUid()))
                     .addOnSuccessListener(aVoid -> {
+                        Log.d("SiteDetailsActivity", "Successfully left the site");
                         Toast.makeText(this, "You have left the site.", Toast.LENGTH_SHORT).show();
-                        // Update user's siteJoined field
+
                         DocumentReference userRef = db.collection("users").document(currentUser.getUid());
                         userRef.update("siteJoined", FieldValue.arrayRemove(siteId));
                         isParticipant = false;
                         leaveSiteButton.setEnabled(false);
                     })
                     .addOnFailureListener(e -> {
-                        // Handle failure
+                        Log.e("SiteDetailsActivity", "Error leaving site", e);
                     });
+        } else {
+            Log.d("SiteDetailsActivity", "Current user is null");
         }
     }
+
 
 
     private void updateUIDetails() {
