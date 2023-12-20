@@ -50,24 +50,21 @@ public class SiteDetailEditActivity extends AppCompatActivity {
         String newDescription = editTextSiteDescription.getText().toString().trim();
         String newAdditionalInfo = editTextAdditionalInfo.getText().toString().trim();
 
-        // Validate input
         if (newName.isEmpty() || newDescription.isEmpty()) {
             Toast.makeText(this, "Name and description cannot be empty", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Fetch current site details
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("locations").document(siteId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    String currentName = document.getString("name"); // Assuming the field is named 'name'
-                    // Now create the notification with the current name
-                    createNotificationInFirestore(currentName);
-
-                    // Then update the site details
-                    updateSiteDetails(newName, newDescription, newAdditionalInfo);
+                    String currentName = document.getString("name");
+                    getCurrentParticipants(siteId, participantIds -> {
+                        createNotificationInFirestore(currentName, participantIds);
+                        updateSiteDetails(newName, newDescription, newAdditionalInfo);
+                    });
                 } else {
                     Log.d("Firestore", "No such document");
                 }
@@ -76,6 +73,7 @@ public class SiteDetailEditActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void updateSiteDetails(String name, String description, String additionalInfo) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -86,14 +84,12 @@ public class SiteDetailEditActivity extends AppCompatActivity {
     }
 
 
-    private void createNotificationInFirestore(String siteName) {
+    private void createNotificationInFirestore(String siteName, List<String> participants) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> notification = new HashMap<>();
         notification.put("title", "Site Updated: " + siteName);
         notification.put("description", "The site '" + siteName + "' you are participating in has been updated.");
-        // Assuming you have a method to get the current list of participants
-        List<String> participants = getCurrentParticipants(siteId); // Implement this method
         notification.put("participants", participants);
 
         db.collection("notifications").add(notification)
@@ -102,8 +98,8 @@ public class SiteDetailEditActivity extends AppCompatActivity {
     }
 
 
-    private List<String> getCurrentParticipants(String siteId) {
-        final List<String> participants = new ArrayList<>();
+
+    private void getCurrentParticipants(String siteId, ParticipantsCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("locations").document(siteId).get().addOnCompleteListener(task -> {
@@ -112,17 +108,25 @@ public class SiteDetailEditActivity extends AppCompatActivity {
                 if (document.exists()) {
                     List<String> participantIds = (List<String>) document.get("participants");
                     if (participantIds != null) {
-                        participants.addAll(participantIds);
+                        callback.onCallback(participantIds);
+                    } else {
+                        callback.onCallback(new ArrayList<>());
                     }
                 } else {
                     Log.d("Firestore", "No such document");
+                    callback.onCallback(new ArrayList<>());
                 }
             } else {
                 Log.d("Firestore", "get failed with ", task.getException());
+                callback.onCallback(new ArrayList<>());
             }
         });
-
-        return participants;
     }
+
+
+    public interface ParticipantsCallback {
+        void onCallback(List<String> participantIds);
+    }
+
 
 }
