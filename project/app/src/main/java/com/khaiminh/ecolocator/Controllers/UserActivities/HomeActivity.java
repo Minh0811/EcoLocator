@@ -6,9 +6,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.khaiminh.ecolocator.R;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.util.Log;
+import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -18,6 +22,9 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Log.d(TAG, "onCreate: Started");
 
@@ -46,5 +53,25 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         });
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_notify) {
+            // Handle notification button click
+            showNotification();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showNotification() {
+        // Implement your notification logic here
+        Toast.makeText(this, "Notification Clicked", Toast.LENGTH_SHORT).show();
     }
 }

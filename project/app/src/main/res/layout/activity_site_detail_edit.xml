@@ -11,58 +11,32 @@
         android:layout_marginTop="16dp" />
 
     <EditText
-        android:id="@+id/siteName"
+        android:id="@+id/editTextSiteName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Site Name"
-        android:layout_below="@id/backButton"
-        android:layout_marginTop="16dp" />
+        android:layout_below="@id/backButton"/>
 
     <EditText
-        android:id="@+id/siteDescription"
+        android:id="@+id/editTextSiteDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Description"
         android:inputType="textMultiLine"
-        android:layout_below="@id/siteName" />
+        android:layout_below="@id/editTextSiteName"/>
 
     <EditText
-        android:id="@+id/siteDateTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Date and Time"
-        android:focusable="false"
-        android:layout_below="@id/siteDescription" />
-
-    <EditText
-        android:id="@+id/siteAdditionalInfo"
+        android:id="@+id/editTextAdditionalInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Additional Information"
-        android:layout_below="@id/siteDateTime" />
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_below="@id/siteAdditionalInfo" />
-
-    <TextView
-        android:id="@+id/tvCoordinates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/map"
-        android:layout_marginTop="8dp"
-        android:text="Coordinates: "/>
+        android:layout_below="@id/editTextSiteDescription"/>
 
     <Button
-        android:id="@+id/btnCreateSite"
+        android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/edit_site"
-        android:layout_below="@id/tvCoordinates"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        android:text="Save"
+        android:layout_below="@id/editTextAdditionalInfo"/>
 
 </RelativeLayout>
