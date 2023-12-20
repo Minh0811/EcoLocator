@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/wallpaper"
     tools:context=".Controllers.UserActivities.HomeActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -11,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        />
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -24,7 +26,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:backgroundTint="@color/green"
+        android:textColor="@color/white"/>
 
     <!-- Wrapper for ListView -->
     <LinearLayout
@@ -49,7 +53,9 @@
         android:layout_height="wrap_content"
         android:text="Create Site"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/toolbar"
+        android:backgroundTint="@color/green"
+        android:textColor="@color/white"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSites"
