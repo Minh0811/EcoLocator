@@ -3,6 +3,10 @@ package com.khaiminh.ecolocator.Controllers.UserActivities;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.khaiminh.ecolocator.R;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,8 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
+import android.widget.PopupWindow;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -71,7 +84,46 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showNotification() {
-        // Implement your notification logic here
-        Toast.makeText(this, "Notification Clicked", Toast.LENGTH_SHORT).show();
+        ListView listView = findViewById(R.id.notification_listview);
+
+        if (listView.getVisibility() == View.VISIBLE) {
+            listView.setVisibility(View.GONE);
+        } else {
+            fetchNotifications(); // Fetch and display notifications
+            listView.setVisibility(View.VISIBLE);
+        }
     }
+
+    private void fetchNotifications() {
+        String currentUserId = getCurrentUserId(); // Implement this method to get the current user's ID
+        // Query your database to fetch notifications
+        // For example, if using Firebase Firestore:
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("notifications")
+                .whereArrayContains("participants", currentUserId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // Handle the fetched data
+                    List<String> notificationDescriptions = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        String description = document.getString("description");
+                        notificationDescriptions.add(description);
+                    }
+                    updateListView(notificationDescriptions);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors
+                    Log.e(TAG, "Error fetching notifications", e);
+                });
+    }
+    private void updateListView(List<String> notifications) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notifications);
+        ListView listView = findViewById(R.id.notification_listview);
+        listView.setAdapter(adapter);
+    }
+    private String getCurrentUserId() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        return (currentUser != null) ? currentUser.getUid() : null;
+    }
+
 }
