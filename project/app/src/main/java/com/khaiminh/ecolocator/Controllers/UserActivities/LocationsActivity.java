@@ -12,6 +12,8 @@ import android.widget.SearchView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -208,7 +210,13 @@ public class LocationsActivity extends AppCompatActivity implements OnMapReadyCa
                     String name = document.getString("name");
                     if (geoPoint != null) {
                         LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(location).title(name));
+                        // Custom icon for the marker
+                        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.locationicon);
+
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(location)
+                                .title(name)
+                                .icon(icon)); // Set the custom icon here
                         markers.add(marker);
                         marker.setTag(document.getId()); // Store the document ID in the marker
                     }
