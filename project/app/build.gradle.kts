@@ -77,5 +77,10 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    // Add the Firebase SDK for Google Analytics
+    implementation ("com.google.firebase:firebase-analytics:21.5.0")
+
+    // Add the Firebase SDK for Cloud Messaging
+    implementation ("com.google.firebase:firebase-messaging:23.4.0")
 
 }
